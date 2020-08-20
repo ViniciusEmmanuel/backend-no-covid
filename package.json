@@ -1,0 +1,44 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "main": "buid/server.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node buid/server.js",
+    "build": "tsc",
+    "dev:server": "ts-node-dev --inspect --no-notify --transpile-only --ignore node_modules src/server.ts",
+    "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js"
+  },
+  "dependencies": {
+    "argon2": "^0.27.0",
+    "bcryptjs": "^2.4.3",
+    "date-fns": "^2.15.0",
+    "dotenv": "^8.2.0",
+    "fastify": "^3.1.1",
+    "fastify-cors": "^4.1.0",
+    "fastify-multer": "^2.0.1",
+    "fastify-static": "^3.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.3.0",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.25",
+    "uuidv4": "^6.2.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^8.5.0",
+    "@types/multer": "^1.4.3",
+    "@types/node": "^14.0.27",
+    "@typescript-eslint/eslint-plugin": "^3.7.1",
+    "@typescript-eslint/parser": "^3.7.1",
+    "eslint": "^7.5.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-import-resolver-typescript": "^2.0.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.0.5",
+    "ts-node-dev": "^1.0.0-pre.56",
+    "typescript": "^3.9.7"
+  }
+}
