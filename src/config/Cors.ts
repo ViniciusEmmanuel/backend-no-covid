@@ -1,27 +1,9 @@
-interface OriginCallback {
-  (err: Error | null, allow: boolean): void;
-}
+import { FastifyCorsOptions } from 'fastify-cors';
 
-const workOrigin = (currentOrigin: string, cb: OriginCallback): void => {
-  if (process.env.NODE_ENV === 'development') {
-    cb(null, true);
-    return;
-  }
-  if (
-    currentOrigin === process.env.APP_URL ||
-    currentOrigin === process.env.URL_ENABLE_CORS
-  ) {
-    cb(null, true);
-    return;
-  }
+const optionsCors: FastifyCorsOptions = {
+  origin: process.env.URL_ENABLE_CORS,
 
-  cb(new Error('Not allowed'), false);
-};
-
-export default {
-  origin: workOrigin,
-
-  methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  methods: ['GET', 'PUT', 'OPTIONS', 'PATCH', 'POST', 'DELETE'],
 
   allowedHeaders: ['Content-Type', 'Authorization'],
 
@@ -29,3 +11,5 @@ export default {
 
   maxAge: 90,
 };
+
+export default optionsCors;

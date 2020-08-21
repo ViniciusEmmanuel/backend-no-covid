@@ -1,7 +1,9 @@
 import 'dotenv/config';
 import 'reflect-metadata';
 
-import fastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
+import fastify, { FastifyInstance } from 'fastify';
+import fastifyFormBody from 'fastify-formbody';
+
 import cors from 'fastify-cors';
 import configCors from './config/Cors';
 
@@ -47,10 +49,15 @@ export default class App {
     });
   }
 
+  private parsedContentType() {
+    this.app.register(fastifyFormBody);
+  }
+
   public async run() {
     try {
       this.execptionHandler();
       this.cors();
+      this.parsedContentType();
 
       await this.router();
       await this.ORM();

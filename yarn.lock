@@ -1105,6 +1105,14 @@ fastify-error@^0.1.0:
   resolved "https://registry.yarnpkg.com/fastify-error/-/fastify-error-0.1.0.tgz#7ca9d3708a2b1a74aefed0e5dde1b96d0390f718"
   integrity sha512-jyCEc3VPEc8/PUwzDQAM2JlXLK2BG6L19mMJzbGij0TfdY1sHF9pCnnAn6Vcoi84TMTBOJynNDQUMUz6cjRmBw==
 
+fastify-formbody@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/fastify-formbody/-/fastify-formbody-4.0.3.tgz#59255a3aa2aec86625d25a33a1cd4add1e45dfe6"
+  integrity sha512-tVaqoJB+Mm3ISeTk+HgDAjHqJWQg+0kwssQUqg9zXKMfQq9EkE+YPiudTncHGFF6CeSlNHQOV3y6bRWFGlRbZQ==
+  dependencies:
+    fastify-plugin "^2.0.0"
+    qs "^6.5.1"
+
 fastify-multer@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/fastify-multer/-/fastify-multer-2.0.1.tgz#28993bf3109f78aa0ef531407a89fe6d430a47b7"
@@ -2352,7 +2360,7 @@ q@2.0.x:
     pop-iterate "^1.0.1"
     weak-map "^1.0.5"
 
-qs@^6.9.4:
+qs@^6.5.1, qs@^6.9.4:
   version "6.9.4"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.9.4.tgz#9090b290d1f91728d3c22e54843ca44aea5ab687"
   integrity sha512-A1kFqHekCTM7cz0udomYUoYNWjBebHm/5wzU/XqrBRBNWectVH0QIiN+NEcZ0Dte5hvzHwbr8+XQmguPhJ6WdQ==
