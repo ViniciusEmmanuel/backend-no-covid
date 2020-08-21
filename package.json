@@ -7,7 +7,8 @@
     "start": "node buid/server.js",
     "build": "tsc",
     "dev:server": "ts-node-dev --inspect --no-notify --transpile-only --ignore node_modules src/server.ts",
-    "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js"
+    "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
+    "migration": "./node_modules/.bin/typeorm"
   },
   "dependencies": {
     "argon2": "^0.27.0",
@@ -21,6 +22,7 @@
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.3.0",
     "reflect-metadata": "^0.1.13",
+    "twilio": "^3.49.0",
     "typeorm": "^0.2.25",
     "uuidv4": "^6.2.0"
   },
