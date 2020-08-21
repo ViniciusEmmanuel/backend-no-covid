@@ -1,7 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { CreateOrderService } from '../service/CreateOrderService';
-
-import twilioService from 'twilio';
+import { GetOrderByIdService } from '../service/GetOrderBydIdService';
 
 interface IOrder {
   categoria: string;
@@ -15,6 +14,16 @@ interface RequestBody {
 }
 
 export class OrderController {
+  public async getById(request: FastifyRequest, response: FastifyReply) {
+    const { id } = request.params as { id: string };
+
+    const getOrderByIdService = new GetOrderByIdService();
+
+    const order = await getOrderByIdService.execute(id);
+
+    return response.status(200).send(order);
+  }
+
   public async store(request: FastifyRequest, response: FastifyReply) {
     const { order } = request.body as RequestBody;
 

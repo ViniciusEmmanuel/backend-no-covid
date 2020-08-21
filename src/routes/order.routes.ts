@@ -8,6 +8,18 @@ const RouterOrder = (
   opts: { prefix: string },
   next: (err?: Error) => void,
 ) => {
+  app.get(
+    '/orders/:id',
+    {
+      schema: {
+        params: {
+          id: { type: 'string' },
+        },
+      },
+    },
+    new OrderController().getById,
+  );
+
   app.post('/orders', {}, new OrderController().store);
 
   next();

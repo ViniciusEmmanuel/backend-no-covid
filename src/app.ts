@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import 'reflect-metadata';
 
-import fastify, { FastifyInstance } from 'fastify';
+import fastify, { FastifyInstance, FastifyError } from 'fastify';
 import fastifyFormBody from 'fastify-formbody';
 
 import cors from 'fastify-cors';
@@ -31,7 +31,7 @@ export default class App {
   }
 
   private execptionHandler() {
-    this.app.setErrorHandler(function (error, _, response) {
+    this.app.setErrorHandler(function (error, request, response) {
       if (error instanceof AppError) {
         console.error('AppError:', error);
 
@@ -40,7 +40,16 @@ export default class App {
           message: error.message,
         });
       }
-      console.error('Internal Error', error);
+
+      if (
+        error.name === 'Error' ||
+        (error.validation && error.validation.length > 0)
+      ) {
+        return response.send({
+          status: 'error',
+          message: error.message,
+        });
+      }
 
       return response.status(500).send({
         status: 'error',
