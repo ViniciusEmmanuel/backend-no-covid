@@ -1,13 +1,13 @@
 import { getRepository } from 'typeorm';
 import twilioService from 'twilio';
 
-import { StatuOrderEnum, StatusShopOrderEnum } from '../enum';
+import { StatuOrderEnum, StatusShopOrderEnum } from '../../enum';
 
-import { Order } from '../models/Order';
-import { StoreOrder } from '../models/StoreOrder';
-import { Store } from '../models/Store';
+import { Order } from '../../models/Order';
+import { StoreOrder } from '../../models/StoreOrder';
+import { Store } from '../../models/Store';
 
-import { AppError } from '../exceptions/AppErros';
+import { AppError } from '../../exceptions/AppErros';
 
 interface IOrder {
   produto: string;
@@ -53,7 +53,6 @@ export class CreateOrderService {
       (acc, item: IOrder, index: number) => {
         if (index === 0) {
           acc += '\n';
-          return acc;
         }
 
         const { produto, quantidade } = item;
@@ -69,8 +68,6 @@ export class CreateOrderService {
       '',
     );
 
-    console.log(parsedOrderToMessage);
-
     const twilio = twilioService(
       process.env.TWILIO_ACCOUNT_SID,
       process.env.TWILIO_AUTH_TOKEN,
@@ -81,6 +78,8 @@ export class CreateOrderService {
     const messageOrder = `Comércio do Seu João, o senhor tem um pedido para analisar ${parsedOrderToMessage} \n \n Por favor, para aceitar o pedido, digite 1`;
 
     const stores = await this.storeRepository.find();
+
+    //'whatsapp:+553496307984'
 
     const promissesMessageTwilio = stores.map(store =>
       twilio.messages.create({

@@ -2,9 +2,9 @@ import path from 'path';
 import fs from 'fs';
 
 import { getRepository } from 'typeorm';
-import { User } from '../models/User';
-import { destination } from '../middleware/uploadFiles';
-import { AppError } from '../exceptions/AppErros';
+import { User } from '../../models/User';
+import { destination } from '../../middleware/uploadFiles';
+import { AppError } from '../../exceptions/AppErros';
 
 interface IUpdateAvatarUser {
   userId: string;

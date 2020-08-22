@@ -35,12 +35,12 @@ export class Orders1597993469998 implements MigrationInterface {
       },
       {
         name: 'created_at',
-        type: 'timestamp',
+        type: 'timestamptz',
         default: 'now()',
       },
       {
         name: 'updated_at',
-        type: 'timestamp',
+        type: 'timestamptz',
         default: 'now()',
       },
     ],

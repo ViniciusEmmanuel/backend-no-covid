@@ -22,6 +22,18 @@ const RouterOrder = (
 
   app.post('/orders', {}, new OrderController().store);
 
+  app.put(
+    '/orders',
+    {
+      schema: {
+        params: {
+          id: { type: 'string' },
+        },
+      },
+    },
+    new OrderController().update,
+  );
+
   next();
 };
 

@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { AuthenticateService } from '../service/AuthenticateService';
+import { AuthenticateService } from '../service/User/AuthenticateService';
 
 interface ISessionStore {
   email: string;

@@ -1,9 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-
-import twilioService from 'twilio';
-import { getRepository } from 'typeorm';
-import { StoreOrder } from '../models/StoreOrder';
-import { Order } from '../models/Order';
+import { UpdatedStatusOrderService } from '../service/StatusOrder/UpdatedStatusOrderService';
 
 interface ResponseTwilio {
   SmsMessageSid: string;
@@ -23,23 +19,15 @@ export class StoreOrderController {
   public async store(request: FastifyRequest, response: FastifyReply) {
     const { MessageSid, Body } = request.body as ResponseTwilio;
 
-    const storeOrderRepository = getRepository(StoreOrder);
+    console.log('POST TWILIO', request.body);
 
-    const findStoreOrder = await storeOrderRepository.findOne({
-      where: { message_twilio_sid: MessageSid },
+    const updatedStatusOrder = new UpdatedStatusOrderService();
+
+    await updatedStatusOrder.execute({
+      messageSid: MessageSid,
+      bodyMessage: Body,
     });
 
-    if (!findStoreOrder) {
-      return;
-    }
-
-    const orderRepository = getRepository(Order);
-
-    const order = await orderRepository.findOne(findStoreOrder.order_id);
-
-    if (order && !order.store_id) {
-    }
-
-    console.log('RETORNO DE MENSSAGEM DA LOJA:', MessageSid, Body);
+    return response.status(200).send();
   }
 }

@@ -3,6 +3,7 @@ import 'reflect-metadata';
 
 import fastify, { FastifyInstance, FastifyError } from 'fastify';
 import fastifyFormBody from 'fastify-formbody';
+import './app/Events';
 
 import cors from 'fastify-cors';
 import configCors from './config/Cors';
@@ -10,7 +11,8 @@ import configCors from './config/Cors';
 import { ORM } from './config/ORM';
 import { ServerOptions } from './config/ServerOption';
 import { Router } from './routes';
-import { AppError } from './app/exceptions/AppErros';
+import { ExceptionHandler } from './app/exceptions/ExceptionHandler';
+
 export default class App {
   private app: FastifyInstance;
 
@@ -31,31 +33,7 @@ export default class App {
   }
 
   private execptionHandler() {
-    this.app.setErrorHandler(function (error, request, response) {
-      if (error instanceof AppError) {
-        console.error('AppError:', error);
-
-        return response.status(error.statusCode).send({
-          status: 'error',
-          message: error.message,
-        });
-      }
-
-      if (
-        error.name === 'Error' ||
-        (error.validation && error.validation.length > 0)
-      ) {
-        return response.send({
-          status: 'error',
-          message: error.message,
-        });
-      }
-
-      return response.status(500).send({
-        status: 'error',
-        message: 'Internal server error',
-      });
-    });
+    this.app = new ExceptionHandler(this.app).execute();
   }
 
   private parsedContentType() {

@@ -8,6 +8,9 @@ import { RouterSession, RouterSessionVersion } from './session.routes';
 import { RouterUsers, RouterUsersVersion } from './user.routes';
 
 import { RouterOrder, RouterOrderVersion } from './order.routes';
+
+import { RouterShopOrder, RouterShopOrderVersion } from './storeOrder.routes';
+
 export class Router {
   constructor(private App: FastifyInstance) {}
 
@@ -31,6 +34,10 @@ export class Router {
 
     await this.App.register(RouterOrder, {
       prefix: this.prefix(RouterOrderVersion),
+    });
+
+    await this.App.register(RouterShopOrder, {
+      prefix: this.prefix(RouterShopOrderVersion),
     });
 
     return this.App;

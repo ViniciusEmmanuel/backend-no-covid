@@ -32,13 +32,18 @@ export class CreateUsers1597025480085 implements MigrationInterface {
             isNullable: true,
           },
           {
+            name: 'whatsapp',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
             name: 'created_at',
-            type: 'timestamp',
+            type: 'timestamptz',
             default: 'now()',
           },
           {
             name: 'updated_at',
-            type: 'timestamp',
+            type: 'timestamptz',
             default: 'now()',
           },
         ],

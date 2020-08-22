@@ -1,9 +1,9 @@
 import { isUuid } from 'uuidv4';
 import { getRepository } from 'typeorm';
 
-import { Order } from '../models/Order';
-import { AppError } from '../exceptions/AppErros';
-import { StatuOrderEnum } from '../enum';
+import { Order } from '../../models/Order';
+import { AppError } from '../../exceptions/AppErros';
+import { StatuOrderEnum } from '../../enum';
 
 interface ResponseGetOrder {
   id: string;

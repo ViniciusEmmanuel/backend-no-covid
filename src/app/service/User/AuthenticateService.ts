@@ -1,8 +1,8 @@
 import { getRepository } from 'typeorm';
-import { User } from '../models/User';
-import { Hash } from '../provider/Hash';
-import { AuthenticateToken } from '../provider/AuthenticateToken';
-import { AppError } from '../exceptions/AppErros';
+import { User } from '../../models/User';
+import { Hash } from '../../provider/Hash';
+import { AuthenticateToken } from '../../provider/AuthenticateToken';
+import { AppError } from '../../exceptions/AppErros';
 
 interface CreateAuthenticate {
   email: string;

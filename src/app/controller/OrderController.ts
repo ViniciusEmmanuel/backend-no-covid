@@ -1,6 +1,8 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { CreateOrderService } from '../service/CreateOrderService';
-import { GetOrderByIdService } from '../service/GetOrderBydIdService';
+import { CreateOrderService } from '../service/Order/CreateOrderService';
+import { GetOrderByIdService } from '../service/Order/GetOrderBydIdService';
+
+import { Event } from '../provider/EventsEmiter';
 
 interface IOrder {
   categoria: string;
@@ -29,13 +31,19 @@ export class OrderController {
 
     const createOrderService = new CreateOrderService();
 
-    const user = { id: '180b8154-81e3-49e7-8f7e-0892c8d04a33' };
+    const user = { id: '0ab8c306-5096-4173-b3ed-08838de192e7' };
 
     const newOrder = await createOrderService.execute({
       order,
       userId: user.id,
     });
 
+    Event.emit('new:order', newOrder);
+
     return response.status(201).send(newOrder);
+  }
+
+  public async update(request: FastifyRequest, response: FastifyReply) {
+    const { id } = request.params as { id: string };
   }
 }

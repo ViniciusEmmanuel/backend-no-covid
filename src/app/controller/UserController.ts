@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { CreateUserService } from '../service/CreateUserService';
-import { UpdateAvatarUserService } from '../service/UpdateAvatarUserService';
+import { CreateUserService } from '../service/User/CreateUserService';
+import { UpdateAvatarUserService } from '../service/User/UpdateAvatarUserService';
 
 interface IUserStore {
   name: string;

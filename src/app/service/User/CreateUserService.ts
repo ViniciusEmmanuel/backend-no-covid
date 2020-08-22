@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
-import { User } from '../models/User';
-import { Hash } from '../provider/Hash';
-import { AppError } from '../exceptions/AppErros';
+import { User } from '../../models/User';
+import { Hash } from '../../provider/Hash';
+import { AppError } from '../../exceptions/AppErros';
 
 interface CreateUser {
   name: string;
