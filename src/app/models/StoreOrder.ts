@@ -24,6 +24,9 @@ export class StoreOrder {
   @Column()
   status: number;
 
+  @Column()
+  value: string;
+
   @CreateDateColumn()
   created_at: Date;
 

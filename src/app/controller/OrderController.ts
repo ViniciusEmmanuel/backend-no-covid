@@ -59,7 +59,7 @@ export class OrderController {
 
       const order = await getOrderByIdService.execute(params.id);
 
-      connection.socket.send(JSON.stringify(order));
+      connection.socket.send(JSON.stringify({ order }));
 
       return;
     } catch (error) {

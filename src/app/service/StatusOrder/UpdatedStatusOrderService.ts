@@ -135,10 +135,6 @@ export class UpdatedStatusOrderService {
         `Por favor envie o preço total referente ao pedido. \n *Ex:*  ${storeOrder.order.order}:100.`,
       );
 
-      console.log('aceitou o pedido', storeOrder.store.name);
-
-      Event.emit('updated:order', storeOrder.order);
-
       return;
     }
 
@@ -148,7 +144,10 @@ export class UpdatedStatusOrderService {
         .trim()
         .match(new RegExp(/\d+:\d+/g))
     ) {
+      const [, value] = String(bodyMessage).split(':');
+
       storeOrder.status = StatusShopOrderEnum.awaitingUser;
+      storeOrder.value = value;
 
       const updatedStadusOrder = this.orderRepository.update(
         { id: storeOrder.order_id },
@@ -173,6 +172,10 @@ export class UpdatedStatusOrderService {
         updatedStadusStoreOrder,
         updateMessageStore,
       ]);
+
+      console.log('aceitou o pedido e enviou o preço', storeOrder.store.name);
+
+      Event.emit('updated:order', storeOrder.order);
 
       return;
     }
