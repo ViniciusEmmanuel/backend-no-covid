@@ -11,6 +11,7 @@ const RouterSession = (
   app.post(
     '/sessions',
     {
+      websocket: false,
       schema: {
         body: {
           email: { type: 'string' },

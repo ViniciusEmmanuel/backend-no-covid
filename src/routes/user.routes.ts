@@ -13,6 +13,7 @@ const RouterUsers = (
   app.post(
     '/users',
     {
+      websocket: false,
       schema: {
         body: {
           name: { type: 'string' },

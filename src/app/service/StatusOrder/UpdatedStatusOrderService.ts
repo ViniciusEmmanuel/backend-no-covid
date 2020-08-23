@@ -9,6 +9,7 @@ import { StatusShopOrderEnum, StatuOrderEnum } from '../../enum';
 import { AppError } from '../../exceptions/AppErros';
 import { Order } from '../../models/Order';
 import { Store } from '../../models/Store';
+import { Event } from '../../provider/EventsEmiter';
 
 interface IUpdatedStatusOrder {
   from: string;
@@ -133,6 +134,10 @@ export class UpdatedStatusOrderService {
         [storeOrder],
         `Por favor envie o preço total referente ao pedido. \n *Ex:*  ${storeOrder.order.order}:100.`,
       );
+
+      console.log('aceitou o pedido', storeOrder.store.name);
+
+      Event.emit('updated:order', storeOrder.order);
 
       return;
     }

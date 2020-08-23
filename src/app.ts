@@ -1,9 +1,9 @@
 import 'dotenv/config';
 import 'reflect-metadata';
 
-import fastify, { FastifyInstance, FastifyError } from 'fastify';
+import fastify, { FastifyInstance } from 'fastify';
 import fastifyFormBody from 'fastify-formbody';
-import './app/Events';
+import fastifyWs from 'fastify-websocket';
 
 import cors from 'fastify-cors';
 import configCors from './config/Cors';
@@ -12,6 +12,7 @@ import { ORM } from './config/ORM';
 import { ServerOptions } from './config/ServerOption';
 import { Router } from './routes';
 import { ExceptionHandler } from './app/exceptions/ExceptionHandler';
+import { Events } from './app/Events';
 
 export default class App {
   private app: FastifyInstance;
@@ -40,11 +41,26 @@ export default class App {
     this.app.register(fastifyFormBody);
   }
 
+  private ws() {
+    this.app.register(fastifyWs, {
+      options: {
+        clientTracking: true,
+        //path: 'api/v1/orders/:id',
+      },
+    });
+  }
+
+  private events() {
+    new Events(this.app).execute();
+  }
+
   public async run() {
     try {
       this.execptionHandler();
       this.cors();
       this.parsedContentType();
+      this.ws();
+      this.events();
 
       await this.router();
       await this.ORM();

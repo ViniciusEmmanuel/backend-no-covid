@@ -1156,6 +1156,15 @@ fastify-static@^3.2.0:
     readable-stream "^3.4.0"
     send "^0.17.1"
 
+fastify-websocket@^2.0.7:
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/fastify-websocket/-/fastify-websocket-2.0.7.tgz#3e51415dfa1245cee630c633a21f78d55ed80b91"
+  integrity sha512-N8fP9Fbwpv1L1Zv0Hk+r7/ep6mD49BZeyFIC1ffErD5oHogEpEkwDBJxcloGGb6c+zhMu1ZS0ymYdrguI4+MrA==
+  dependencies:
+    fastify-plugin "^2.0.0"
+    find-my-way "^3.0.0"
+    ws "^7.2.3"
+
 fastify@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/fastify/-/fastify-3.1.1.tgz#0a830f4a929abd7f2b05c08620a609a104300a36"
@@ -3208,6 +3217,11 @@ write@1.0.3:
   integrity sha512-/lg70HAjtkUgWPVZhZcm+T4hkL8Zbtp1nFNOn3lRrxnlv50SRBv7cR7RqR+GMsd3hUXy9hWBo4CHTbFTcOYwig==
   dependencies:
     mkdirp "^0.5.1"
+
+ws@^7.2.3:
+  version "7.3.1"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-7.3.1.tgz#d0547bf67f7ce4f12a72dfe31262c68d7dc551c8"
+  integrity sha512-D3RuNkynyHmEJIpD2qrgVkc9DQ23OrN/moAwZX4L8DfvszsJxpjQuUq3LMx6HoYji9fbIOBY18XWBsAux1ZZUA==
 
 xml2js@^0.4.17:
   version "0.4.23"

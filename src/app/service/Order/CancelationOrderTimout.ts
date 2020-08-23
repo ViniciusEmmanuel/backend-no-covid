@@ -18,9 +18,10 @@ export class CancelationOrderTimout {
 
     const order = await this.orderRepository.findOne(orderId);
 
-    if (!order) return;
+    // Em relação ao pedido parado para o cliente
+    // FIXME: Falta informa o cliente
 
-    if (order.status === StatuOrderEnum.pending) {
+    if (order && order.status === StatuOrderEnum.pending) {
       order.status = StatuOrderEnum.canceledForStoreTimeout;
 
       await this.orderRepository.save(order);
@@ -43,6 +44,33 @@ export class CancelationOrderTimout {
         await this.storeOrderRepository.save(updatedStoreOrders);
 
         await this.sendCancelationMessageTwilio(updatedStoreOrders);
+      }
+    }
+
+    // Em relação ao pedido parado para a loja
+
+    const storeOrders = await this.storeOrderRepository.find({
+      relations: ['order'],
+      where: { order_id: orderId },
+    });
+
+    if (storeOrders && storeOrders.length > 0) {
+      const cancelationStoreOrder = storeOrders.reduce(
+        (acc: StoreOrder[], storeOrder) => {
+          if (storeOrder.status === StatusShopOrderEnum.acceptOrder) {
+            storeOrder.status = StatusShopOrderEnum.canceledForTimeout;
+            acc.push(storeOrder);
+          }
+
+          return acc;
+        },
+        [],
+      );
+
+      if (cancelationStoreOrder.length > 0) {
+        await this.storeOrderRepository.save(cancelationStoreOrder);
+
+        await this.sendCancelationMessageTwilio(cancelationStoreOrder);
       }
     }
   }

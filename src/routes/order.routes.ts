@@ -1,4 +1,4 @@
-import { FastifyInstance } from 'fastify';
+import { FastifyInstance, WebsocketHandler } from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 
 import { OrderController } from '../app/controller/OrderController';
@@ -13,6 +13,7 @@ const RouterOrder = (
     '/orders',
     {
       preHandler: [ensureAuthenticated],
+      websocket: false,
     },
     new OrderController().getAll,
   );
@@ -21,13 +22,14 @@ const RouterOrder = (
     '/orders/:id',
     {
       preHandler: [ensureAuthenticated],
+      websocket: true,
       schema: {
         params: {
           id: { type: 'string' },
         },
       },
     },
-    new OrderController().getById,
+    new OrderController().getById as WebsocketHandler,
   );
 
   app.post(
@@ -36,8 +38,8 @@ const RouterOrder = (
     new OrderController().store,
   );
 
-  app.put(
-    '/orders',
+  app.patch(
+    '/orders/:id',
     {
       preHandler: [ensureAuthenticated],
       schema: {

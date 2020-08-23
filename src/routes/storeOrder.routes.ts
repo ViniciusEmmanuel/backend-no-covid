@@ -8,7 +8,11 @@ const RouterShopOrder = (
   opts: { prefix: string },
   next: (err?: Error) => void,
 ) => {
-  app.post('/shop/order/messages', {}, new StoreOrderController().store);
+  app.post(
+    '/shop/order/messages',
+    { websocket: false },
+    new StoreOrderController().store,
+  );
 
   next();
 };
