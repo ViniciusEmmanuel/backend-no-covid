@@ -3,16 +3,23 @@ import { getRepository } from 'typeorm';
 
 import { Order } from '../../models/Order';
 import { AppError } from '../../exceptions/AppErros';
-import { StatuOrderEnum } from '../../enum';
+import { StatuOrderEnum, StatusShopOrderEnum } from '../../enum';
+import { StoreOrder } from '../../models/StoreOrder';
 
 interface ResponseGetOrder {
-  id: string;
-  status: string;
-  created_at: Date;
+  order: {
+    id: string;
+    status: string;
+    created_at: Date;
+  };
+  storeOrder: StoreOrder[];
 }
 
 export class GetOrderByIdService {
-  constructor(private orderRepository = getRepository(Order)) {}
+  constructor(
+    private orderRepository = getRepository(Order),
+    private storeOrderRepository = getRepository(StoreOrder),
+  ) {}
 
   public async execute(id: string): Promise<ResponseGetOrder> {
     if (!isUuid(id)) {
@@ -21,14 +28,30 @@ export class GetOrderByIdService {
 
     const order = await this.orderRepository.findOne(id);
 
+    const storeOrder = await this.storeOrderRepository.find({
+      relations: ['store'],
+      where: { order_id: id, status: StatusShopOrderEnum.awaitingUser },
+    });
+
     if (!order) {
       throw new AppError('Order not found.', 404);
     }
 
+    const stores = storeOrder.map(store => {
+      delete store.order;
+
+      return {
+        ...store,
+      };
+    });
+
     return {
-      id: order.id,
-      status: StatuOrderEnum[order.status],
-      created_at: order.created_at,
+      order: {
+        id: order.id,
+        status: StatuOrderEnum[order.status],
+        created_at: order.created_at,
+      },
+      storeOrder,
     };
   }
 }

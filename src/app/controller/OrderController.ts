@@ -57,9 +57,11 @@ export class OrderController {
     try {
       const getOrderByIdService = new GetOrderByIdService();
 
-      const order = await getOrderByIdService.execute(params.id);
+      const { order, storeOrder } = await getOrderByIdService.execute(
+        params.id,
+      );
 
-      connection.socket.send(JSON.stringify({ order }));
+      connection.socket.send(JSON.stringify({ order, storeOrder }));
 
       return;
     } catch (error) {
