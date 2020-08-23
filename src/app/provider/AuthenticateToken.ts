@@ -12,9 +12,7 @@ interface Iverify {
 interface Itoken {
   iat: number;
   exp: number;
-  sub: {
-    id: string;
-  };
+  sub: string;
 }
 
 export class AuthenticateToken {
@@ -27,7 +25,7 @@ export class AuthenticateToken {
     return this.provider.sign(payload, this.hashEncode, {
       algorithm: 'HS256',
       subject: id,
-      expiresIn: '1d',
+      expiresIn: '3d',
     });
   }
 
@@ -35,7 +33,7 @@ export class AuthenticateToken {
     try {
       const { sub } = this.provider.verify(token, this.hashEncode) as Itoken;
 
-      return sub;
+      return { id: sub };
     } catch {
       throw new Error('Invalid token');
     }

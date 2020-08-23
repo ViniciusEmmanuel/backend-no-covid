@@ -2,6 +2,8 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import { CreateUserService } from '../service/User/CreateUserService';
 import { UpdateAvatarUserService } from '../service/User/UpdateAvatarUserService';
 
+import { AuthenticateToken } from '../provider/AuthenticateToken';
+
 interface IUserStore {
   name: string;
   email: string;
@@ -19,7 +21,12 @@ export class UserController {
 
       delete user.password;
 
-      return response.status(201).send(user);
+      const token = new AuthenticateToken().sing({
+        payload: { id: user.id },
+        id: user.id,
+      });
+
+      return response.status(201).send({ token, ...user });
     } catch (error) {
       return response.status(400).send({ message: error.message });
     }

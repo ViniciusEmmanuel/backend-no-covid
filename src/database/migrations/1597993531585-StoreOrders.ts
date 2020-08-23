@@ -25,11 +25,6 @@ export class StoreOrders1597993531585 implements MigrationInterface {
         type: 'uuid',
       },
       {
-        name: 'message_twilio_sid',
-        type: 'varchar',
-        isUnique: true,
-      },
-      {
         name: 'status',
         type: 'int',
       },

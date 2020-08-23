@@ -8,6 +8,10 @@ import { StoreOrder } from '../../models/StoreOrder';
 import { Store } from '../../models/Store';
 
 import { AppError } from '../../exceptions/AppErros';
+import {
+  MessageListInstance,
+  MessageInstance,
+} from 'twilio/lib/rest/api/v2010/account/message';
 
 interface IOrder {
   produto: string;
@@ -60,7 +64,7 @@ export class CreateOrderService {
         const marca = item.marca || 'Qualquer marca disponivel.';
 
         acc += '\n';
-        acc += `Produto: ${produto} | Marca: ${marca} | Quantidade: ${quantidade}`;
+        acc += `*Produto:* ${produto} | *Marca:* ${marca} | *Quantidade:* ${quantidade}`;
         acc += '\n';
 
         return acc;
@@ -73,34 +77,57 @@ export class CreateOrderService {
       process.env.TWILIO_AUTH_TOKEN,
     );
 
-    await this.orderRepository.save(newOrder);
-
-    const messageOrder = `Comércio do Seu João, o senhor tem um pedido para analisar ${parsedOrderToMessage} \n \n Por favor, para aceitar o pedido, digite 1`;
-
     const stores = await this.storeRepository.find();
 
-    //'whatsapp:+553496307984'
+    if ((stores && stores.length === 0) || !stores) {
+      throw new AppError("Platform doesn't have any stores yet", 404);
+    }
 
-    const promissesMessageTwilio = stores.map(store =>
-      twilio.messages.create({
-        body: messageOrder,
-        from: 'whatsapp:+14155238886',
-        to: `whatsapp:${store.whatsapp}`,
-      }),
+    await this.orderRepository.save(newOrder);
+
+    const messageOrder = (storeName: string, storeOrderId: number) =>
+      `Boas vindas da *Uai Lista!* 😃😃😃 \n\n *${storeName}*, meu nome é *Gui* e verifiquei em meu sistema que a sua loja tem *um pedido* para analisar! \n\n *Pedido número:* ${storeOrderId} ${parsedOrderToMessage} \n \n *Por favor*, para *aceitar o pedido*, digite junto com o número do pedido o dígito *1* e para *negar o pedido*, digite junto com o número do pedido o dígito *0*. \n\n *Ex:* ${storeOrderId}:1 --> *aceitar* \n ${storeOrderId}:0 --> *negar* \n\n *Agradecemos* a sua *preferencia!* 🤝🤝🤝`;
+
+    const { storeOrders, promissesMessageTwilio } = stores.reduce(
+      (acc, store) => {
+        acc.storeOrders.push(
+          this.storeOrderRepository.create({
+            order_id: newOrder.id,
+            store_id: store.id,
+            status: StatusShopOrderEnum.awaitingStore,
+          }),
+        );
+
+        acc.promissesMessageTwilio.push(
+          twilio.messages.create({
+            body: messageOrder(store.name, Number(newOrder.order)),
+            from: 'whatsapp:+14155238886',
+            to: `whatsapp:${store.whatsapp}`,
+          }),
+        );
+
+        return acc;
+      },
+      {
+        storeOrders: [] as StoreOrder[],
+        promissesMessageTwilio: [] as Promise<MessageInstance>[],
+      },
     );
 
-    const messages = await Promise.all(promissesMessageTwilio);
+    await Promise.all([
+      promissesMessageTwilio,
+      this.storeOrderRepository.save(storeOrders),
+    ]);
 
-    const storeOrders = messages.map((message, index) =>
-      this.storeOrderRepository.create({
-        message_twilio_sid: message.sid,
-        order_id: newOrder.id,
-        store_id: stores[index].id,
-        status: StatusShopOrderEnum.awaitingStore,
-      }),
-    );
+    // const promissesMessageTwilio = stores.map(store =>
+    //   twilio.messages.create({
+    //     body: messageOrder(store.name),
+    //     from: 'whatsapp:+14155238886',
+    //     to: `whatsapp:${store.whatsapp}`,
+    //   }),
+    // );
 
-    await this.storeOrderRepository.save(storeOrders);
+    //const messages = await Promise.all(promissesMessageTwilio);
 
     return {
       id: newOrder.id,

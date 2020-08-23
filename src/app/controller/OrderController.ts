@@ -3,6 +3,7 @@ import { CreateOrderService } from '../service/Order/CreateOrderService';
 import { GetOrderByIdService } from '../service/Order/GetOrderBydIdService';
 
 import { Event } from '../provider/EventsEmiter';
+import { GetAllOrderService } from '../service/Order/GetAllOrdersService';
 
 interface IOrder {
   categoria: string;
@@ -16,6 +17,14 @@ interface RequestBody {
 }
 
 export class OrderController {
+  public async getAll(request: FastifyRequest, response: FastifyReply) {
+    const getAllOrderService = new GetAllOrderService();
+
+    const order = await getAllOrderService.execute(request.user.id);
+
+    return response.status(200).send(order);
+  }
+
   public async getById(request: FastifyRequest, response: FastifyReply) {
     const { id } = request.params as { id: string };
 
@@ -31,11 +40,9 @@ export class OrderController {
 
     const createOrderService = new CreateOrderService();
 
-    const user = { id: '0ab8c306-5096-4173-b3ed-08838de192e7' };
-
     const newOrder = await createOrderService.execute({
       order,
-      userId: user.id,
+      userId: request.user.id,
     });
 
     Event.emit('new:order', newOrder);

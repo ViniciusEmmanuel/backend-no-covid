@@ -12,17 +12,14 @@ import { Order } from './Order';
 
 @Entity('store_orders')
 export class StoreOrder {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn('increment')
+  id: number;
 
   @Column()
   order_id: string;
 
   @Column()
   store_id: string;
-
-  @Column()
-  message_twilio_sid: string;
 
   @Column()
   status: number;

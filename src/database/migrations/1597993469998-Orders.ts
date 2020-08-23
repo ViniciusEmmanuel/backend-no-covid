@@ -17,6 +17,10 @@ export class Orders1597993469998 implements MigrationInterface {
         default: 'uuid_generate_v4()',
       },
       {
+        name: 'order',
+        type: 'serial',
+      },
+      {
         name: 'user_id',
         type: 'uuid',
       },

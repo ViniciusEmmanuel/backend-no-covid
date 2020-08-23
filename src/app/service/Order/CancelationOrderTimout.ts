@@ -53,11 +53,12 @@ export class CancelationOrderTimout {
       process.env.TWILIO_AUTH_TOKEN,
     );
 
-    const messageCacelation = `O prazo para aceitar o pedido foi encerrado.`;
+    const messageCacelation = (orderNumber: number) =>
+      `O prazo para aceitar o pedido *${orderNumber}* foi encerrado.`;
 
     const promissesMessageTwilio = storeOrders.map(storeOrder =>
       twilio.messages.create({
-        body: messageCacelation,
+        body: messageCacelation(storeOrder.order.order),
         from: 'whatsapp:+14155238886',
         to: `whatsapp:${storeOrder.store.whatsapp}`,
       }),

@@ -17,14 +17,12 @@ interface ResponseTwilio {
 
 export class StoreOrderController {
   public async store(request: FastifyRequest, response: FastifyReply) {
-    const { MessageSid, Body } = request.body as ResponseTwilio;
-
-    console.log('POST TWILIO', request.body);
+    const { Body, From } = request.body as ResponseTwilio;
 
     const updatedStatusOrder = new UpdatedStatusOrderService();
 
     await updatedStatusOrder.execute({
-      messageSid: MessageSid,
+      from: From,
       bodyMessage: Body,
     });
 
