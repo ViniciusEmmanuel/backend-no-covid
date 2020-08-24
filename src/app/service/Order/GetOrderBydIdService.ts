@@ -28,36 +28,61 @@ export class GetOrderByIdService {
 
     const order = await this.orderRepository.findOne(id);
 
-    const storeOrder = await this.storeOrderRepository.find({
-      relations: ['store'],
-      where: {
-        order_id: id,
-        status: In([
-          StatusShopOrderEnum.awaitingUser,
-          StatusShopOrderEnum.acceptByClient,
-        ]),
-      },
-    });
-
     if (!order) {
       throw new AppError('Order not found.', 404);
     }
 
-    const stores = storeOrder.map(storeOrder => {
-      delete storeOrder.order;
+    let stores = null;
 
-      if (order.status === StatuOrderEnum.separation) {
-        if (storeOrder.store_id === order.store_id) {
+    if (order.status === StatuOrderEnum.separation) {
+      const storeOrder = await this.storeOrderRepository.find({
+        relations: ['store'],
+        where: {
+          order_id: id,
+          status: StatusShopOrderEnum.acceptByClient,
+        },
+      });
+
+      stores = storeOrder.map(storeOrder => {
+        delete storeOrder.order;
+
+        if (order.status === StatuOrderEnum.separation) {
+          if (storeOrder.store_id === order.store_id) {
+            return {
+              ...storeOrder,
+            };
+          }
+        } else {
           return {
             ...storeOrder,
           };
         }
-      } else {
-        return {
-          ...storeOrder,
-        };
-      }
-    });
+      });
+    } else {
+      const storeOrder = await this.storeOrderRepository.find({
+        relations: ['store'],
+        where: {
+          order_id: id,
+          status: StatusShopOrderEnum.awaitingUser,
+        },
+      });
+
+      stores = storeOrder.map(storeOrder => {
+        delete storeOrder.order;
+
+        if (order.status === StatuOrderEnum.separation) {
+          if (storeOrder.store_id === order.store_id) {
+            return {
+              ...storeOrder,
+            };
+          }
+        } else {
+          return {
+            ...storeOrder,
+          };
+        }
+      });
+    }
 
     return {
       order: {
