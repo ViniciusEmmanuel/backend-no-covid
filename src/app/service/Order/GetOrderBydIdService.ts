@@ -5,6 +5,7 @@ import { Order } from '../../models/Order';
 import { AppError } from '../../exceptions/AppErros';
 import { StatuOrderEnum, StatusShopOrderEnum } from '../../enum';
 import { StoreOrder } from '../../models/StoreOrder';
+import { Event } from '../../provider/EventsEmiter';
 
 interface ResponseGetOrder {
   order: {
@@ -48,12 +49,17 @@ export class GetOrderByIdService {
         }
       }
 
-      if (storeOrder.status === StatusShopOrderEnum.awaitingUser) {
+      if (
+        storeOrder.status === StatusShopOrderEnum.awaitingUser &&
+        order.status !== StatuOrderEnum.separation
+      ) {
         acc.push(storeOrder);
       }
 
       return acc;
     }, []);
+
+    Event.emit('new:order', order);
 
     return {
       order: {
