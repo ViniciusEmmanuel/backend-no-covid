@@ -1,6 +1,4 @@
 import { StoreOrder } from '../models/StoreOrder';
-import { Order } from '../models/Order';
-import { Store } from '../models/Store';
 import { getRepository, Repository } from 'typeorm';
 import { StatusShopOrderEnum } from '../enum';
 
@@ -8,15 +6,11 @@ export class UpdateClientUserEvent {
   private socketServer: any;
 
   private storeOrderRepository: Repository<StoreOrder>;
-  // private orderRepository: Repository<Order>;
-  // private storeRepository: Repository<Store>;
 
   constructor(socketServer: any) {
     this.socketServer = socketServer;
 
     this.storeOrderRepository = getRepository(StoreOrder);
-    // this.orderRepository = getRepository(Order);
-    // this.storeRepository = getRepository(Store);
   }
 
   public async execute(orderId: string) {
@@ -28,6 +22,8 @@ export class UpdateClientUserEvent {
     console.log('storeOrder dentro do evento ');
 
     if (storeOrder && storeOrder.length > 0) {
+      console.log('StoreOrder selecionado', storeOrder);
+
       this.socketServer.clients.forEach(function each(client: any) {
         if (
           client.readyState === 1 &&

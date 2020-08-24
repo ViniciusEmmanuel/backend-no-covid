@@ -37,17 +37,12 @@ export class Events {
 
           break;
 
-        // case StatuOrderEnum.canceledForStoreTimeout.toString():
-        //   break;
+        case StatuOrderEnum.canceledForStoreTimeout:
+          console.log('Cancelado por timeout');
 
-        // case StatuOrderEnum.awaitingUserChoseStore.toString():
-        //   break;
+          new UpdateClientUserEvent(this.app.websocketServer).execute(order.id);
 
-        // case StatuOrderEnum.separation.toString():
-        //   break;
-
-        // case StatuOrderEnum.ready.toString():
-        //   break;
+          break;
 
         default:
           break;

@@ -12,7 +12,7 @@ interface ResponseGetOrder {
     status: string;
     created_at: Date;
   };
-  storeOrder: StoreOrder[];
+  storeOrder: (StoreOrder | undefined)[];
 }
 
 export class GetOrderByIdService {
@@ -37,12 +37,20 @@ export class GetOrderByIdService {
       throw new AppError('Order not found.', 404);
     }
 
-    const stores = storeOrder.map(store => {
-      delete store.order;
+    const stores = storeOrder.map(storeOrder => {
+      delete storeOrder.order;
 
-      return {
-        ...store,
-      };
+      if (order.status === StatuOrderEnum.separation) {
+        if (storeOrder.store_id === order.store_id) {
+          return {
+            ...storeOrder,
+          };
+        }
+      } else {
+        return {
+          ...storeOrder,
+        };
+      }
     });
 
     return {
@@ -51,7 +59,7 @@ export class GetOrderByIdService {
         status: StatuOrderEnum[order.status],
         created_at: order.created_at,
       },
-      storeOrder,
+      storeOrder: stores,
     };
   }
 }

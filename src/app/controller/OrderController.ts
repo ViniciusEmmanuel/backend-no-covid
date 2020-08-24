@@ -9,6 +9,7 @@ import { GetAllOrderService } from '../service/Order/GetAllOrdersService';
 import { AppError } from '../exceptions/AppErros';
 import { Order } from '../models/Order';
 import { AuthenticateToken } from '../provider/AuthenticateToken';
+import { UpdatedOrderInStoreService } from '../service/Order/UpdatedOrderInStoreService';
 
 interface IOrder {
   categoria: string;
@@ -93,5 +94,25 @@ export class OrderController {
 
   public async update(request: FastifyRequest, response: FastifyReply) {
     const { id } = request.params as { id: string };
+
+    const { store, entrega, meio, type } = request.body as {
+      type: number;
+      store: string;
+      entrega: number;
+      meio: number;
+    };
+
+    const updatedOrderInStoreService = new UpdatedOrderInStoreService();
+
+    await updatedOrderInStoreService.execute({
+      orderId: id,
+      userId: request.user.id,
+      storeId: store,
+      entrega,
+      meio,
+      type,
+    });
+
+    return response.status(204).send({});
   }
 }

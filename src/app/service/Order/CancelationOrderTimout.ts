@@ -21,7 +21,7 @@ export class CancelationOrderTimout {
     // Em relação ao pedido parado para o cliente
     // FIXME: Falta informa o cliente
 
-    if (order && order.status === StatuOrderEnum.pending) {
+    if (order && order.status !== StatuOrderEnum.separation) {
       order.status = StatuOrderEnum.canceledForStoreTimeout;
 
       await this.orderRepository.save(order);
@@ -46,6 +46,8 @@ export class CancelationOrderTimout {
         await this.sendCancelationMessageTwilio(updatedStoreOrders);
       }
     }
+
+    // Se não existe mais lojas cancelar o pedido
 
     // Em relação ao pedido parado para a loja
 

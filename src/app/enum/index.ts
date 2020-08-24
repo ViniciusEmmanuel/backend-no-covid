@@ -4,6 +4,7 @@ export enum StatuOrderEnum {
   separation = 3,
   ready = 4,
   canceledForStoreTimeout = 5,
+  refusedByClient = 6,
 }
 
 export enum StatusShopOrderEnum {
@@ -12,4 +13,6 @@ export enum StatusShopOrderEnum {
   awaitingUser = 3,
   canceledForTimeout = 4,
   refused = 5,
+  acceptByClient = 6,
+  refusedByClient = 7,
 }
