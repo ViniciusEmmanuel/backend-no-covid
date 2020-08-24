@@ -30,15 +30,25 @@ export class CancelationOrderTimout {
         relations: ['order', 'store'],
         where: {
           order_id: order.id,
-          status: StatusShopOrderEnum.awaitingStore,
         },
       });
 
-      const updatedStoreOrders = storeOrders.map(storeOrder => {
-        storeOrder.status = StatusShopOrderEnum.canceledForTimeout;
+      const updatedStoreOrders = storeOrders.reduce(
+        (acc: StoreOrder[], storeOrder) => {
+          if (
+            storeOrder.status !== StatusShopOrderEnum.refusedByClient &&
+            storeOrder.status !== StatusShopOrderEnum.refused &&
+            storeOrder.status !== StatusShopOrderEnum.acceptByClient
+          ) {
+            storeOrder.status = StatusShopOrderEnum.canceledForTimeout;
 
-        return storeOrder;
-      });
+            acc.push(storeOrder);
+          }
+
+          return acc;
+        },
+        [],
+      );
 
       if (updatedStoreOrders.length > 0) {
         await this.storeOrderRepository.save(updatedStoreOrders);
