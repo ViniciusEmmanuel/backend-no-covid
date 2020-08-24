@@ -28,61 +28,32 @@ export class GetOrderByIdService {
 
     const order = await this.orderRepository.findOne(id);
 
+    const storeOrder = await this.storeOrderRepository.find({
+      relations: ['store'],
+      where: {
+        order_id: id,
+      },
+    });
+
     if (!order) {
       throw new AppError('Order not found.', 404);
     }
 
-    let stores = null;
+    const stores = storeOrder.reduce((acc: StoreOrder[], storeOrder) => {
+      delete storeOrder.order;
 
-    if (order.status === StatuOrderEnum.separation) {
-      const storeOrder = await this.storeOrderRepository.find({
-        relations: ['store'],
-        where: {
-          order_id: id,
-          status: StatusShopOrderEnum.acceptByClient,
-        },
-      });
-
-      stores = storeOrder.map(storeOrder => {
-        delete storeOrder.order;
-
-        if (order.status === StatuOrderEnum.separation) {
-          if (storeOrder.store_id === order.store_id) {
-            return {
-              ...storeOrder,
-            };
-          }
-        } else {
-          return {
-            ...storeOrder,
-          };
+      if (order.status === StatuOrderEnum.separation) {
+        if (storeOrder.store_id === order.store_id) {
+          acc.push(storeOrder);
         }
-      });
-    } else {
-      const storeOrder = await this.storeOrderRepository.find({
-        relations: ['store'],
-        where: {
-          order_id: id,
-          status: StatusShopOrderEnum.awaitingUser,
-        },
-      });
+      }
 
-      stores = storeOrder.map(storeOrder => {
-        delete storeOrder.order;
+      if (storeOrder.status === StatusShopOrderEnum.awaitingUser) {
+        acc.push(storeOrder);
+      }
 
-        if (order.status === StatuOrderEnum.separation) {
-          if (storeOrder.store_id === order.store_id) {
-            return {
-              ...storeOrder,
-            };
-          }
-        } else {
-          return {
-            ...storeOrder,
-          };
-        }
-      });
-    }
+      return acc;
+    }, []);
 
     return {
       order: {

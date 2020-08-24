@@ -1,6 +1,6 @@
 import twilioService from 'twilio';
 import { isUuid } from 'uuidv4';
-import { getRepository, Not, In } from 'typeorm';
+import { getRepository, Not, WhereExpression } from 'typeorm';
 
 import { Order } from '../../models/Order';
 import { AppError } from '../../exceptions/AppErros';
@@ -57,6 +57,7 @@ export class UpdatedOrderInStoreService {
 
     if (Number(type) === 1) {
       order.status = StatuOrderEnum.separation;
+      order.store_id = storeId;
 
       await this.orderRepository.save(order);
 
@@ -73,7 +74,7 @@ export class UpdatedOrderInStoreService {
       const storeOrders = await this.storeOrderRepository.find({
         where: {
           order_id: orderId,
-          store_id: Not(storeId),
+          store_id: null,
         },
       });
 
