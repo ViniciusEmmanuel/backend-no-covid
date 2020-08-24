@@ -74,7 +74,7 @@ export class UpdatedOrderInStoreService {
       const storeOrders = await this.storeOrderRepository.find({
         where: {
           order_id: orderId,
-          store_id: null,
+          store_id: StatusShopOrderEnum.awaitingUser,
         },
       });
 

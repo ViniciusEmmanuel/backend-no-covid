@@ -59,8 +59,6 @@ export class GetOrderByIdService {
       return acc;
     }, []);
 
-    Event.emit('new:order', order);
-
     return {
       order: {
         id: order.id,
