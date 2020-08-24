@@ -23,6 +23,9 @@ export class User {
   @Column()
   avatar: string;
 
+  @Column()
+  whatsapp: string;
+
   @CreateDateColumn()
   created_at: Date;
 

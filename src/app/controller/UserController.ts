@@ -8,25 +8,46 @@ interface IUserStore {
   name: string;
   email: string;
   password: string;
+  type: number;
+  whatsapp: string;
+  DDD: string;
 }
 
 export class UserController {
   public async store(request: FastifyRequest, response: FastifyReply) {
     try {
-      const { name, email, password } = request.body as IUserStore;
+      const {
+        name,
+        email,
+        password,
+        type,
+        whatsapp,
+        DDD,
+      } = request.body as IUserStore;
 
       const createUserService = new CreateUserService();
 
-      const user = await createUserService.execute({ name, email, password });
-
-      delete user.password;
-
-      const token = new AuthenticateToken().sing({
-        payload: { id: user.id },
-        id: user.id,
+      const user = await createUserService.execute({
+        name,
+        email,
+        password,
+        type,
+        whatsapp,
+        DDD,
       });
 
-      return response.status(201).send({ token, ...user });
+      if (user) {
+        delete user.password;
+
+        const token = new AuthenticateToken().sing({
+          payload: { id: user.id },
+          id: user.id,
+        });
+
+        return response.status(201).send({ token, ...user });
+      }
+
+      return response.status(204).send({});
     } catch (error) {
       return response.status(400).send({ message: error.message });
     }

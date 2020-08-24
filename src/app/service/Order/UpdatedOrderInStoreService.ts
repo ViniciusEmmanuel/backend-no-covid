@@ -74,23 +74,20 @@ export class UpdatedOrderInStoreService {
         where: {
           order_id: orderId,
           store_id: Not(storeId),
-          status: Not([
-            StatusShopOrderEnum.refused,
-            StatusShopOrderEnum.refusedByClient,
-            StatusShopOrderEnum.canceledForTimeout,
-          ]),
         },
       });
 
-      const updatedStoreOrder = storeOrders.map(storeOrder => {
-        storeOrder.status = StatusShopOrderEnum.refusedByClient;
+      if (storeOrders.length > 0) {
+        const updatedStoreOrder = storeOrders.map(storeOrder => {
+          storeOrder.status = StatusShopOrderEnum.refusedByClient;
 
-        return storeOrder;
-      });
+          return storeOrder;
+        });
 
-      await this.storeOrderRepository.save(updatedStoreOrder);
+        await this.storeOrderRepository.save(updatedStoreOrder);
 
-      await this.sendCancelationMessageTwilio(updatedStoreOrder);
+        await this.sendCancelationMessageTwilio(updatedStoreOrder);
+      }
     }
 
     // Recusou o pedido
