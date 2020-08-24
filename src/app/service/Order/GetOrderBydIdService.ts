@@ -1,5 +1,5 @@
 import { isUuid } from 'uuidv4';
-import { getRepository } from 'typeorm';
+import { getRepository, In } from 'typeorm';
 
 import { Order } from '../../models/Order';
 import { AppError } from '../../exceptions/AppErros';
@@ -30,7 +30,13 @@ export class GetOrderByIdService {
 
     const storeOrder = await this.storeOrderRepository.find({
       relations: ['store'],
-      where: { order_id: id, status: StatusShopOrderEnum.awaitingUser },
+      where: {
+        order_id: id,
+        status: In([
+          StatusShopOrderEnum.awaitingUser,
+          StatusShopOrderEnum.acceptByClient,
+        ]),
+      },
     });
 
     if (!order) {
